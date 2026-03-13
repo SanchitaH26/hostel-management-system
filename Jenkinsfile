@@ -14,7 +14,7 @@ pipeline {
             steps {
                 echo '>>> Checking out source code from GitHub...'
                 git branch: 'main',
-                    url: 'https://github.com/YOUR_USERNAME/smart-hostel-complaint.git'
+                    url: 'https://github.com/SanchitaH26/hostel-management-system.git'
             }
         }
 
