@@ -1,0 +1,69 @@
+---
+# ─── Smart Hostel Complaint System ────────────────────────────────
+# Ansible Playbook: Automated Deployment
+# Run: ansible-playbook ansible/playbook.yml
+# ──────────────────────────────────────────────────────────────────
+
+- name: Deploy Smart Hostel Complaint System
+  hosts: localhost
+  connection: local
+  become: false
+
+  vars:
+    app_dir: "{{ playbook_dir }}/.."
+    repo_url: "https://github.com/YOUR_USERNAME/smart-hostel-complaint.git"
+
+  tasks:
+
+    - name: "Check Docker is running"
+      command: docker info
+      register: docker_check
+      ignore_errors: true
+
+    - name: "Fail if Docker not running"
+      fail:
+        msg: "Docker is not running. Please start Docker Desktop first."
+      when: docker_check.rc != 0
+
+    - name: "Pull latest code from GitHub"
+      git:
+        repo: "{{ repo_url }}"
+        dest: "{{ app_dir }}"
+        force: yes
+      ignore_errors: true
+
+    - name: "Stop existing containers (if any)"
+      command: docker-compose down
+      args:
+        chdir: "{{ app_dir }}"
+      ignore_errors: true
+
+    - name: "Build Docker images"
+      command: docker-compose build
+      args:
+        chdir: "{{ app_dir }}"
+
+    - name: "Start all services"
+      command: docker-compose up -d
+      args:
+        chdir: "{{ app_dir }}"
+
+    - name: "Wait for backend to be ready"
+      uri:
+        url: "http://localhost:8080/api/complaints/stats"
+        method: GET
+        status_code: 200
+      register: result
+      until: result.status == 200
+      retries: 10
+      delay: 5
+      ignore_errors: true
+
+    - name: "Deployment Summary"
+      debug:
+        msg:
+          - "============================================"
+          - " Deployment Complete!"
+          - " Frontend : http://localhost:3000"
+          - " Backend  : http://localhost:8080"
+          - "============================================"
