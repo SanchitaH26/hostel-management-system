@@ -2,7 +2,6 @@ version: '3.8'
 
 services:
 
-  # ─── MySQL Database ──────────────────────────────────────────────
   mysql:
     image: mysql:8.0
     container_name: hostel-mysql
@@ -10,18 +9,18 @@ services:
     environment:
       MYSQL_DATABASE: hostel_complaints
       MYSQL_ROOT_PASSWORD: hostelpass123
+      MYSQL_ROOT_HOST: '%'
     ports:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-phostelpass123"]
+      interval: 20s
+      timeout: 10s
+      retries: 10
+      start_period: 40s
 
-  # ─── Spring Boot Backend ─────────────────────────────────────────
   backend:
     build:
       context: ./backend
@@ -39,7 +38,6 @@ services:
       SPRING_DATASOURCE_PASSWORD: hostelpass123
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
 
-  # ─── React Frontend ──────────────────────────────────────────────
   frontend:
     build:
       context: ./frontend
