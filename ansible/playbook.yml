@@ -11,7 +11,7 @@
 
   vars:
     app_dir: "{{ playbook_dir }}/.."
-    repo_url: "https://github.com/YOUR_USERNAME/smart-hostel-complaint.git"
+    repo_url: "https://github.com/SanchitaH26/hostel-management-system.git"
 
   tasks:
 
