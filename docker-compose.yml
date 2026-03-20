@@ -1,4 +1,4 @@
-version: '3.8'
+
 
 services:
 
@@ -37,7 +37,7 @@ services:
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: hostelpass123
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
-
+      GROQ_API_KEY: ${GROQ_API_KEY}
   frontend:
     build:
       context: ./frontend

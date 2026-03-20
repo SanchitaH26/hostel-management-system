@@ -25,6 +25,10 @@ public class Complaint {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
+    private Priority priority = Priority.MEDIUM;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Status status = Status.OPEN;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -45,23 +49,26 @@ public class Complaint {
 
     public enum Category { WATER, ELECTRICITY, INTERNET, CLEANLINESS, FURNITURE, OTHER }
     public enum Status   { OPEN, IN_PROGRESS, RESOLVED }
+    public enum Priority { LOW, MEDIUM, HIGH, URGENT }
 
     // ─── Getters ──────────────────────────────────────────────────
-    public Long getId()              { return id; }
-    public String getTitle()         { return title; }
-    public String getDescription()   { return description; }
-    public Category getCategory()    { return category; }
-    public Status getStatus()        { return status; }
-    public User getStudent()         { return student; }
-    public String getAdminRemark()   { return adminRemark; }
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public LocalDateTime getUpdatedAt() { return updatedAt; }
+    public Long getId()                  { return id; }
+    public String getTitle()             { return title; }
+    public String getDescription()       { return description; }
+    public Category getCategory()        { return category; }
+    public Priority getPriority()        { return priority; }
+    public Status getStatus()            { return status; }
+    public User getStudent()             { return student; }
+    public String getAdminRemark()       { return adminRemark; }
+    public LocalDateTime getCreatedAt()  { return createdAt; }
+    public LocalDateTime getUpdatedAt()  { return updatedAt; }
 
     // ─── Setters ──────────────────────────────────────────────────
     public void setId(Long id)                  { this.id = id; }
     public void setTitle(String title)          { this.title = title; }
     public void setDescription(String d)        { this.description = d; }
     public void setCategory(Category c)         { this.category = c; }
+    public void setPriority(Priority p)         { this.priority = p; }
     public void setStatus(Status s)             { this.status = s; }
     public void setStudent(User u)              { this.student = u; }
     public void setAdminRemark(String r)        { this.adminRemark = r; }

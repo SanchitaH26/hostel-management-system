@@ -19,3 +19,10 @@ export const updateStatus    = (id, status, remark = '') =>
   api.put(`/complaints/${id}/status?status=${status}&remark=${encodeURIComponent(remark)}`);
 export const deleteComplaint = (id)                       => api.delete(`/complaints/${id}`);
 export const getByStatus     = (status)                   => api.get(`/complaints/status/${status}`);
+
+// ─── Announcements ─────────────────────────────────────────────────
+export const getAnnouncements      = ()           => api.get('/announcements');
+export const getAllAnnouncements    = ()           => api.get('/announcements/all');
+export const createAnnouncement    = (data)       => api.post('/announcements', data);
+export const deactivateAnnouncement = (id)        => api.put(`/announcements/${id}/deactivate`);
+export const deleteAnnouncement    = (id)         => api.delete(`/announcements/${id}`);

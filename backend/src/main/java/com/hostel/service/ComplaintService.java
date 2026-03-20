@@ -69,9 +69,20 @@ public class ComplaintService {
     }
 
     // Delete complaint
-    public void deleteComplaint(Long id) {
-        complaintRepository.deleteById(id);
-    }
+    // Updated code:
+@Autowired
+private com.hostel.repository.ComplaintLogRepository complaintLogRepository;
+
+public void deleteComplaint(Long id) {
+    Complaint complaint = complaintRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Complaint not found"));
+    // Delete logs first to avoid foreign key constraint error
+    complaintLogRepository.deleteAll(
+        complaintLogRepository.findByComplaintOrderByTimestampAsc(complaint)
+    );
+    complaintRepository.deleteById(id);
+}
+
 
     // Filter by status
     public List<Complaint> getByStatus(Complaint.Status status) {
