@@ -5,6 +5,7 @@ pipeline {
         APP_NAME    = 'smart-hostel-complaint'
         BACKEND_DIR = 'backend'
         DOCKER_IMG  = 'hostel-backend'
+        GROQ_API_KEY = credentials('groq-api-key')
     }
 
     stages {
@@ -58,6 +59,8 @@ pipeline {
                 echo '>>> Deploying containers...'
                 bat 'docker-compose up -d'
                 echo '>>> Application is live at http://localhost:3000'
+                sh 'docker-compose down || true'
+                sh 'docker-compose up -d'
             }
         }
     }
