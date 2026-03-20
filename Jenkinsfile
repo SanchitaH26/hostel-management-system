@@ -2,9 +2,8 @@ pipeline {
     agent any
 
     environment {
-        APP_NAME    = 'smart-hostel-complaint'
-        BACKEND_DIR = 'backend'
-        DOCKER_IMG  = 'hostel-backend'
+        APP_NAME     = 'smart-hostel-complaint'
+        BACKEND_DIR  = 'backend'
         GROQ_API_KEY = credentials('groq-api-key')
     }
 
@@ -19,7 +18,7 @@ pipeline {
             }
         }
 
-        // ─── Stage 2: Build ─────────────────────────────────────────
+        // ─── Stage 2: Maven Build ───────────────────────────────────
         stage('Maven Build') {
             steps {
                 echo '>>> Building Spring Boot application with Maven...'
@@ -30,7 +29,7 @@ pipeline {
             }
         }
 
-        // ─── Stage 3: Test ──────────────────────────────────────────
+        // ─── Stage 3: JUnit Tests ───────────────────────────────────
         stage('JUnit Tests') {
             steps {
                 echo '>>> Running JUnit unit tests...'
@@ -56,11 +55,11 @@ pipeline {
         // ─── Stage 5: Deploy ────────────────────────────────────────
         stage('Deploy') {
             steps {
-                echo '>>> Deploying containers...'
+                echo '>>> Stopping existing containers...'
+                bat 'docker-compose down || true'
+                echo '>>> Starting new containers...'
                 bat 'docker-compose up -d'
                 echo '>>> Application is live at http://localhost:3000'
-                sh 'docker-compose down || true'
-                sh 'docker-compose up -d'
             }
         }
     }
@@ -78,7 +77,7 @@ pipeline {
             echo '============================================'
         }
         always {
-            echo '>>> Pipeline finished. Check Jenkins console for details.'
+            echo '>>> Pipeline finished.'
         }
     }
 }
